@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   TouchableOpacity,
   StyleSheet,
@@ -7,30 +7,40 @@ import {
   ScrollView,
 } from "react-native";
 import Todos from "./components/todos";
-import Search from "./components/search";
+import AddTodos from "./components/addTodos";
+import SearchInput from './components/searchInput'
 
 export default function App() {
-  const text = [{ title: "Todo 1" }, { title: "Todo 2" }, { title: "Todo 3" }];
+  const [todos, setTodos] = useState();
+  const [todosItem, setTodosItem] = useState([]);
+
+  function handleAddTodos() {
+    setTodosItem([...todosItem, todos]);
+    setTodos();
+  }
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.todoWrapper}>
           <Text style={styles.sectionTitle}>Todo List</Text>
+          <View style={styles.searchInput}>
+            <SearchInput />
+          </View>
           <View style={styles.itemsContainer}>
-            {text.map((item, i) => (
+            {todosItem.map((item, i) => (
               <View key={i}>
-                <Todos text={item} />
+                <Todos todosItem={item} />
               </View>
             ))}
           </View>
         </View>
       </ScrollView>
       <View style={styles.btns}>
-        <View style={styles.searchContainer}>
-          <Search />
+        <View style={styles.addTodos}>
+          <AddTodos todos={todos} setTodos={setTodos} todosItem={todosItem} />
         </View>
-        <TouchableOpacity style={styles.addBtn}>
+        <TouchableOpacity style={styles.addBtn} onPress={handleAddTodos}>
           <Text style={styles.btnText}>+</Text>
         </TouchableOpacity>
       </View>
@@ -67,7 +77,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  searchContainer: {
+  addTodos: {
     flex: 1,
   },
   addBtn: {
