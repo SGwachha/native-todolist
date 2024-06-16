@@ -1,11 +1,8 @@
 import React from "react";
-import {
-  TextInput,
-  StyleSheet,
-  KeyboardAvoidingView,
-} from "react-native";
+import { TextInput, StyleSheet, KeyboardAvoidingView } from "react-native";
 
-export default function AddTodos({ todos, setTodos }) {
+export default function AddTodos({ todosData }) {
+  const { todos, setTodos } = todosData;
   return (
     <KeyboardAvoidingView style={styles.writeTaskWrapper}>
       <TextInput

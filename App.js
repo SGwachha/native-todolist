@@ -8,15 +8,39 @@ import {
 } from "react-native";
 import Todos from "./components/todos";
 import AddTodos from "./components/addTodos";
-import SearchInput from './components/searchInput'
+import SearchInput from "./components/searchInput";
+import Modal from "./components/modal";
 
 export default function App() {
   const [todos, setTodos] = useState();
   const [todosItem, setTodosItem] = useState([]);
+  const [modalIndex, setModalIndex] = useState(null);
+  const [onConfirm, setOnConfirm] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [editedTodos, setEditedTodos] = useState();
+
+  const todosData = {
+    modalIndex,
+    setModalIndex,
+    todos,
+    setTodos,
+    todosItem,
+    setTodosItem,
+    onConfirm,
+    setOnConfirm,
+    editModal,
+    setEditModal,
+    editedTodos,
+    setEditedTodos,
+  };
 
   function handleAddTodos() {
     setTodosItem([...todosItem, todos]);
     setTodos();
+  }
+
+  function handleModal(i) {
+    setModalIndex(i === modalIndex ? null : i);
   }
 
   return (
@@ -30,7 +54,12 @@ export default function App() {
           <View style={styles.itemsContainer}>
             {todosItem.map((item, i) => (
               <View key={i}>
-                <Todos todosItem={item} />
+                <TouchableOpacity onPress={() => handleModal(i)}>
+                  <Todos todosItem={item} />
+                </TouchableOpacity>
+                <View style={styles.modalContainer}>
+                  {modalIndex === i && <Modal todosData={todosData} i={i} />}
+                </View>
               </View>
             ))}
           </View>
@@ -38,7 +67,7 @@ export default function App() {
       </ScrollView>
       <View style={styles.btns}>
         <View style={styles.addTodos}>
-          <AddTodos todos={todos} setTodos={setTodos} todosItem={todosItem} />
+          <AddTodos todosData={todosData} />
         </View>
         <TouchableOpacity style={styles.addBtn} onPress={handleAddTodos}>
           <Text style={styles.btnText}>+</Text>
@@ -97,4 +126,5 @@ const styles = StyleSheet.create({
     fontSize: 35,
     color: "#000",
   },
+  modalContainer: {},
 });
