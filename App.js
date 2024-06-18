@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   TouchableOpacity,
   StyleSheet,
@@ -12,18 +12,20 @@ import SearchInput from "./components/searchInput";
 import Modal from "./components/modal";
 
 export default function App() {
-  const [todos, setTodos] = useState();
   const [todosItem, setTodosItem] = useState([]);
   const [modalIndex, setModalIndex] = useState(null);
   const [onConfirm, setOnConfirm] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const [editedTodos, setEditedTodos] = useState();
+  const [editedTodos, setEditedTodos] = useState([]);
+  const [searchTodos, setSearchTodos] = useState("");
+  const [newTodo, setNewTodo] = useState("");
+  const [filteredTodos, setFilteredTodos] = useState([]);
+
+  const scrollViewRef = useRef()
 
   const todosData = {
     modalIndex,
     setModalIndex,
-    todos,
-    setTodos,
     todosItem,
     setTodosItem,
     onConfirm,
@@ -32,11 +34,25 @@ export default function App() {
     setEditModal,
     editedTodos,
     setEditedTodos,
+    searchTodos,
+    setSearchTodos,
+    filteredTodos,
+    setFilteredTodos,
+    newTodo,
+    setNewTodo,
   };
 
   function handleAddTodos() {
-    setTodosItem([...todosItem, todos]);
-    setTodos();
+    if (newTodo.trim() !== "") {
+      setTodosItem([...todosItem, newTodo]);
+      setNewTodo("");
+      setFilteredTodos(
+        [...todosItem, newTodo].filter((todo) =>
+          todo?.toLowerCase().includes(searchTodos.toLowerCase())
+        )
+      );
+      scrollViewRef.current.scrollTo({ y: 0, animated: true });
+    }
   }
 
   function handleModal(i) {
@@ -45,14 +61,14 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.todoWrapper}>
-          <Text style={styles.sectionTitle}>Todo List</Text>
-          <View style={styles.searchInput}>
-            <SearchInput />
-          </View>
+      <View style={styles.todoWrapper}>
+        <Text style={styles.sectionTitle}>Todo List</Text>
+        <View style={styles.searchInput}>
+          <SearchInput todosData={todosData} />
+        </View>
+        <ScrollView contentContainerStyle={styles.scrollContainer} ref={scrollViewRef}>
           <View style={styles.itemsContainer}>
-            {todosItem.map((item, i) => (
+            {filteredTodos.map((item, i) => (
               <View key={i}>
                 <TouchableOpacity onPress={() => handleModal(i)}>
                   <Todos todosItem={item} />
@@ -63,8 +79,8 @@ export default function App() {
               </View>
             ))}
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
       <View style={styles.btns}>
         <View style={styles.addTodos}>
           <AddTodos todosData={todosData} />
@@ -126,5 +142,7 @@ const styles = StyleSheet.create({
     fontSize: 35,
     color: "#000",
   },
-  modalContainer: {},
+  searchInput: {
+    marginBottom: 15
+  },
 });

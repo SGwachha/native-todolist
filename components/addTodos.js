@@ -2,15 +2,15 @@ import React from "react";
 import { TextInput, StyleSheet, KeyboardAvoidingView } from "react-native";
 
 export default function AddTodos({ todosData }) {
-  const { todos, setTodos } = todosData;
+  const { newTodo, setNewTodo } = todosData;
   return (
     <KeyboardAvoidingView style={styles.writeTaskWrapper}>
       <TextInput
-        style={styles.searchInput}
+        style={styles.addInput}
         placeholder={"Add New Todos"}
         textAlign="center"
-        value={todos}
-        onChangeText={(val) => setTodos(val)}
+        value={newTodo}
+        onChangeText={(val) => setNewTodo(val)}
       />
     </KeyboardAvoidingView>
   );
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     justifyContent: "center",
   },
-  searchInput: {
+  addInput: {
     color: "#000",
     textAlign: "center",
   },
