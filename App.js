@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import {
   TouchableOpacity,
   StyleSheet,
@@ -20,8 +20,6 @@ export default function App() {
   const [searchTodos, setSearchTodos] = useState("");
   const [newTodo, setNewTodo] = useState("");
   const [filteredTodos, setFilteredTodos] = useState([]);
-
-  const scrollViewRef = useRef()
 
   const todosData = {
     modalIndex,
@@ -51,7 +49,6 @@ export default function App() {
           todo?.toLowerCase().includes(searchTodos.toLowerCase())
         )
       );
-      scrollViewRef.current.scrollTo({ y: 0, animated: true });
     }
   }
 
@@ -66,7 +63,7 @@ export default function App() {
         <View style={styles.searchInput}>
           <SearchInput todosData={todosData} />
         </View>
-        <ScrollView contentContainerStyle={styles.scrollContainer} ref={scrollViewRef}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.itemsContainer}>
             {filteredTodos.map((item, i) => (
               <View key={i}>
