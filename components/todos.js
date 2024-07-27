@@ -2,6 +2,8 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Todos({ todosItem }) {
+  if (!todosItem) return;
+
   return (
     <View style={styles.item}>
       <View style={styles.itemLeft}>

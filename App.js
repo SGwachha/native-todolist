@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   TouchableOpacity,
   StyleSheet,
   Text,
   View,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Todos from "./components/todos";
 import AddTodos from "./components/addTodos";
@@ -20,6 +22,7 @@ export default function App() {
   const [searchTodos, setSearchTodos] = useState("");
   const [newTodo, setNewTodo] = useState("");
   const [filteredTodos, setFilteredTodos] = useState([]);
+  const scrollViewRef = useRef(null);
 
   const todosData = {
     modalIndex,
@@ -49,6 +52,9 @@ export default function App() {
           todo?.toLowerCase().includes(searchTodos.toLowerCase())
         )
       );
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      }, 100);
     }
   }
 
@@ -57,13 +63,20 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <View style={styles.todoWrapper}>
         <Text style={styles.sectionTitle}>Todo List</Text>
         <View style={styles.searchInput}>
           <SearchInput todosData={todosData} />
         </View>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          ref={scrollViewRef}
+          onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
+        >
           <View style={styles.itemsContainer}>
             {filteredTodos.map((item, i) => (
               <View key={i}>
@@ -86,7 +99,7 @@ export default function App() {
           <Text style={styles.btnText}>+</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -97,11 +110,11 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingBottom: 60,
   },
   todoWrapper: {
     paddingTop: 80,
     paddingHorizontal: 20,
+    flex: 1,
   },
   sectionTitle: {
     color: "#fff",
@@ -110,6 +123,7 @@ const styles = StyleSheet.create({
   },
   itemsContainer: {
     marginTop: 30,
+    marginBottom: 100,
   },
   btns: {
     position: "absolute",
@@ -140,6 +154,9 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   searchInput: {
-    marginBottom: 15
+    marginBottom: 15,
+  },
+  modalContainer: {
+    marginTop: 10,
   },
 });

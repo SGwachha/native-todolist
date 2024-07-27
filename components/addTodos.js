@@ -1,10 +1,10 @@
 import React from "react";
-import { TextInput, StyleSheet, KeyboardAvoidingView } from "react-native";
+import { TextInput, StyleSheet, View } from "react-native";
 
 export default function AddTodos({ todosData }) {
   const { newTodo, setNewTodo } = todosData;
   return (
-    <KeyboardAvoidingView style={styles.writeTaskWrapper}>
+    <View style={styles.writeTaskWrapper}>
       <TextInput
         style={styles.addInput}
         placeholder={"Add New Todos"}
@@ -12,7 +12,7 @@ export default function AddTodos({ todosData }) {
         value={newTodo}
         onChangeText={(val) => setNewTodo(val)}
       />
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 

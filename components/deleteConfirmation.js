@@ -43,7 +43,7 @@ export default function DeleteConfirmationModal({ todosData, i }) {
           <View style={styles.buttonsContainer}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => setOnConfirm(true)}
+              onPress={() => setOnConfirm(false)}
             >
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
